@@ -29,8 +29,13 @@ export function BottomNav() {
                 isActive ? 'text-indigo-600' : 'text-muted-foreground hover:text-foreground'
               )}
             >
-              <Icon className="h-5 w-5" />
-              <span>{label}</span>
+              <span className={cn(
+                'flex items-center justify-center rounded-full w-10 h-6 transition-colors',
+                isActive && 'bg-indigo-100 dark:bg-indigo-950'
+              )}>
+                <Icon className="h-5 w-5" />
+              </span>
+              <span className={cn('font-medium', isActive && 'font-semibold')}>{label}</span>
             </Link>
           );
         })}
