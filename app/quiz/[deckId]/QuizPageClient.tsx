@@ -145,13 +145,13 @@ export function QuizPageClient({ deckId }: Props) {
 
   // Mode select
   return (
-    <div className="mx-auto max-w-lg px-4 py-6">
-      <div className="mb-6 flex items-center gap-3">
-        <Button variant="ghost" size="icon" onClick={() => router.push('/')}>
+    <div className="mx-auto max-w-lg px-4 py-6 overflow-x-hidden">
+      <div className="mb-6 flex items-center gap-3 min-w-0">
+        <Button variant="ghost" size="icon" className="shrink-0" onClick={() => router.push('/')}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
-        <div className="flex-1">
-          <h1 className="font-semibold">{deckName}</h1>
+        <div className="min-w-0 flex-1">
+          <h1 className="font-semibold truncate">{deckName}</h1>
           <p className="text-xs text-muted-foreground">{words.length}개</p>
         </div>
         <AddWordDialog
@@ -191,18 +191,18 @@ export function QuizPageClient({ deckId }: Props) {
           <p className="mb-2 text-sm font-medium text-muted-foreground">단어 목록</p>
           <div className="space-y-1 max-h-60 overflow-y-auto rounded-xl border p-1">
             {words.map((word) => (
-              <div key={word.id} className="flex items-center justify-between rounded-lg px-3 py-2 hover:bg-muted/50 transition-colors">
+              <div key={word.id} className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted/50 transition-colors min-w-0">
                 <div className="min-w-0 flex-1">
                   <FuriganaText
                     japanese={word.japanese}
                     reading={word.reading}
                     show={showFurigana}
-                    className="text-sm font-medium"
+                    className="text-sm font-medium block truncate"
                   />
-                  <span className="ml-2 text-xs text-muted-foreground">{word.korean}</span>
+                  <p className="text-xs text-muted-foreground truncate">{word.korean}</p>
                 </div>
-                <div className="flex items-center gap-2 shrink-0 ml-2">
-                  <span className="text-xs text-muted-foreground">
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <span className="text-xs text-muted-foreground bg-muted rounded px-1.5 py-0.5">
                     {word.type === 'word' ? '단어' : '문장'}
                   </span>
                   <button
