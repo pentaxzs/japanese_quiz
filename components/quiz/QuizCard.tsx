@@ -75,8 +75,8 @@ export function QuizCard({ question, onAnswered }: QuizCardProps) {
         <div
           className={cn(
             'absolute inset-0 flex flex-col items-center justify-center rounded-xl cursor-pointer select-none overflow-hidden',
-            'bg-amber-100 dark:bg-amber-900',
-            'shadow-[3px_5px_16px_rgba(0,0,0,0.18)] dark:shadow-[3px_5px_16px_rgba(0,0,0,0.4)]',
+            'bg-amber-100',
+            'shadow-[3px_5px_16px_rgba(0,0,0,0.18)]',
             'transition-all duration-200 ease-out',
             revealed
               ? 'opacity-0 scale-[0.94] pointer-events-none'
@@ -84,21 +84,21 @@ export function QuizCard({ question, onAnswered }: QuizCardProps) {
           )}
         >
           {/* Tape strip at top */}
-          <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-16 h-6 rounded-sm bg-amber-200/80 dark:bg-amber-700/60 shadow-sm border border-amber-300/40 dark:border-amber-600/40" />
+          <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-16 h-6 rounded-sm bg-amber-200/80 shadow-sm border border-amber-300/40" />
 
           {/* Subtle ruled lines */}
           <div className="absolute inset-x-8 top-10 bottom-8 flex flex-col justify-around pointer-events-none">
             {[0, 1, 2].map((i) => (
-              <div key={i} className="h-px bg-amber-300/50 dark:bg-amber-600/50" />
+              <div key={i} className="h-px bg-amber-300/50" />
             ))}
           </div>
 
           {/* Content */}
           <span className="text-3xl mb-2 z-10">🤫</span>
-          <p className="text-sm font-semibold text-amber-900 dark:text-amber-100 z-10">
+          <p className="text-sm font-semibold text-amber-900 z-10">
             꾹 눌러서 정답 확인
           </p>
-          <p className="text-[11px] text-amber-600 dark:text-amber-400 mt-1 z-10 tracking-wide">
+          <p className="text-[11px] text-amber-600 mt-1 z-10 tracking-wide">
             hold to reveal
           </p>
 
@@ -106,7 +106,7 @@ export function QuizCard({ question, onAnswered }: QuizCardProps) {
           <div className="absolute bottom-0 right-0 w-6 h-6 overflow-hidden">
             <div className="absolute bottom-0 right-0 w-0 h-0
               border-l-[24px] border-l-transparent
-              border-b-[24px] border-b-amber-200 dark:border-b-amber-800
+              border-b-[24px] border-b-amber-200
               drop-shadow-sm" />
           </div>
         </div>
