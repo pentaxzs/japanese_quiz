@@ -49,7 +49,7 @@ export function QuizCard({ question, onAnswered }: QuizCardProps) {
       </div>
 
       {/* Answer reveal area */}
-      <div className="relative min-h-[120px]"
+      <div className="relative overflow-hidden rounded-2xl"
         onMouseDown={() => setRevealed(true)}
         onMouseUp={() => setRevealed(false)}
         onMouseLeave={() => setRevealed(false)}
@@ -58,23 +58,23 @@ export function QuizCard({ question, onAnswered }: QuizCardProps) {
         onTouchCancel={() => setRevealed(false)}
       >
         {/* Actual answer underneath */}
-        <div className="rounded-2xl border-2 border-muted p-6 text-center min-h-[120px] flex flex-col items-center justify-center">
+        <div className="border-2 border-muted p-6 text-center min-h-[120px] flex flex-col items-center justify-center">
           {!isJpPrompt ? (
             <FuriganaText
               japanese={question.word.japanese}
               reading={question.word.reading}
               show={showFurigana}
-              className="text-2xl font-bold"
+              className="break-all font-bold leading-relaxed text-xl"
             />
           ) : (
-            <p className="text-2xl font-bold">{question.word.korean}</p>
+            <p className="break-words font-bold leading-relaxed text-xl">{question.word.korean}</p>
           )}
         </div>
 
         {/* Sticky note overlay */}
         <div
           className={cn(
-            'absolute inset-0 flex flex-col items-center justify-center rounded-xl cursor-pointer select-none overflow-hidden',
+            'absolute inset-0 flex flex-col items-center justify-center cursor-pointer select-none',
             'bg-amber-100',
             'shadow-[3px_5px_16px_rgba(0,0,0,0.18)]',
             'transition-all duration-200 ease-out',
