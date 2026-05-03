@@ -6,7 +6,7 @@ import { Home, BookOpen, AlertCircle, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { href: '/', label: '홈', icon: Home },
+  { href: '/', label: '메뉴', icon: Home },
   { href: '/library', label: '단어장', icon: BookOpen },
   { href: '/wrong-notes', label: '오답', icon: AlertCircle },
   { href: '/settings', label: '설정', icon: Settings },
