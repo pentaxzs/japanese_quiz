@@ -41,10 +41,10 @@ export function QuizCard({ question, onAnswered }: QuizCardProps) {
             japanese={question.word.japanese}
             reading={question.word.reading}
             show={showFurigana}
-            className="text-2xl font-bold leading-relaxed"
+            className="break-all font-bold leading-relaxed text-xl"
           />
         ) : (
-          <p className="text-2xl font-bold leading-relaxed">{question.word.korean}</p>
+          <p className="break-words font-bold leading-relaxed text-xl">{question.word.korean}</p>
         )}
       </div>
 
