@@ -13,7 +13,6 @@ import { useSettingsStore } from '@/store/settings-store';
 import { storage } from '@/lib/storage';
 import { generateQuizQuestions, createQuizSession } from '@/lib/quiz-engine';
 import { AddWordDialog } from '@/components/deck/AddWordDialog';
-import { FuriganaText } from '@/components/ui/FuriganaText';
 import type { Word } from '@/lib/types';
 import { Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -192,13 +191,11 @@ export function QuizPageClient({ deckId }: Props) {
           <div className="space-y-1 max-h-60 overflow-y-auto rounded-xl border p-1">
             {words.map((word) => (
               <div key={word.id} className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted/50 transition-colors min-w-0">
-                <div className="min-w-0 flex-1">
-                  <FuriganaText
-                    japanese={word.japanese}
-                    reading={word.reading}
-                    show={showFurigana}
-                    className="text-sm font-medium block truncate"
-                  />
+                <div className="min-w-0 flex-1 overflow-hidden">
+                  <p className="text-sm font-medium truncate">{word.japanese}</p>
+                  {showFurigana && word.reading && word.reading !== word.japanese && (
+                    <p className="text-xs text-indigo-400 truncate">{word.reading}</p>
+                  )}
                   <p className="text-xs text-muted-foreground truncate">{word.korean}</p>
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">

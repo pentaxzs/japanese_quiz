@@ -70,7 +70,8 @@ body {
   --primary-foreground: #ffffff;
 }
 
-/* Disable pull-to-refresh during quiz */
+/* Disable pull-to-refresh during quiz, prevent horizontal scroll */
 html, body {
   overscroll-behavior-y: contain;
+  overflow-x: hidden;
 }
