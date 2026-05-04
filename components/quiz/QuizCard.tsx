@@ -57,16 +57,16 @@ export function QuizCard({ question, onAnswered }: QuizCardProps) {
         onTouchCancel={() => setRevealed(false)}
       >
         {/* Actual answer underneath */}
-        <div className="border-2 border-muted p-6 text-center min-h-[120px] flex flex-col items-center justify-center">
+        <div className="border-2 border-muted p-6 text-center min-h-[120px] flex flex-col justify-center">
           {!isJpPrompt ? (
-            <div>
+            <div className="w-full">
               {showFurigana && question.word.reading && question.word.reading !== question.word.japanese && (
                 <p className="break-all text-xs text-indigo-400 mb-1 leading-relaxed">{question.word.reading}</p>
               )}
               <p className="break-all font-bold leading-relaxed text-xl">{question.word.japanese}</p>
             </div>
           ) : (
-            <p className="break-words font-bold leading-relaxed text-xl">{question.word.korean}</p>
+            <p className="break-words font-bold leading-relaxed text-xl w-full">{question.word.korean}</p>
           )}
         </div>
 
