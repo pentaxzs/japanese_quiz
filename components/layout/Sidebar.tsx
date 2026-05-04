@@ -1,9 +1,12 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, BookOpen, AlertCircle, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
+const EMOJIS = ['🍙', '🍜', '🍣', '🇯🇵', '🍥'];
 
 const navItems = [
   { href: '/', label: '홈', icon: Home },
@@ -14,11 +17,16 @@ const navItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const [emoji, setEmoji] = useState('');
+
+  useEffect(() => {
+    setEmoji(EMOJIS[Math.floor(Math.random() * EMOJIS.length)]);
+  }, []);
 
   return (
     <aside className="hidden w-56 shrink-0 border-r md:flex md:flex-col">
       <div className="p-6">
-        <h1 className="text-lg font-bold text-indigo-600">일본어 퀴즈</h1>
+        <h1 className="text-lg font-bold text-indigo-600">{emoji} 일본어 퀴즈</h1>
       </div>
       <nav className="flex-1 px-3">
         {navItems.map(({ href, label, icon: Icon }) => {

@@ -27,6 +27,8 @@ import { storage } from '@/lib/storage';
 import type { Deck, Word, ExtractionResult } from '@/lib/types';
 import { toast } from 'sonner';
 
+const EMOJIS = ['🍙', '🍜', '🍣', '🇯🇵', '🍥'];
+
 export default function HomePage() {
   const router = useRouter();
   const { decks, setDecks, addDeck, updateDeck, removeDeck } = useDeckStore();
@@ -36,6 +38,11 @@ export default function HomePage() {
   const [deckStats, setDeckStats] = useState<Record<string, number | null>>({});
   const [renameTarget, setRenameTarget] = useState<Deck | null>(null);
   const [renameValue, setRenameValue] = useState('');
+  const [emoji, setEmoji] = useState('');
+
+  useEffect(() => {
+    setEmoji(EMOJIS[Math.floor(Math.random() * EMOJIS.length)]);
+  }, []);
 
   useEffect(() => {
     storage.getDecks().then(setDecks);
@@ -116,7 +123,7 @@ export default function HomePage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-6">
       <div className="mb-6 flex items-center justify-between md:hidden">
-        <h1 className="text-xl font-bold text-indigo-600">일본어 퀴즈</h1>
+        <h1 className="text-xl font-bold text-indigo-600">{emoji} 일본어 퀴즈</h1>
       </div>
 
       {!apiKey && (
