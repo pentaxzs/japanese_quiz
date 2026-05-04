@@ -147,7 +147,7 @@ export default function SettingsPage() {
               role="switch"
               aria-checked={showFurigana}
               onClick={toggleFurigana}
-              className={`relative h-6 w-11 rounded-full transition-colors overflow-hidden ${showFurigana ? 'bg-indigo-600' : 'bg-muted'}`}
+              className={`relative h-6 w-11 rounded-full transition-colors overflow-hidden ${showFurigana ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-600'}`}
             >
               <span className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${showFurigana ? 'translate-x-5' : 'translate-x-0'}`} />
             </button>
@@ -162,7 +162,7 @@ export default function SettingsPage() {
               role="switch"
               aria-checked={theme === 'dark'}
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className={`relative h-6 w-11 rounded-full transition-colors overflow-hidden ${theme === 'dark' ? 'bg-indigo-600' : 'bg-muted'}`}
+              className={`relative h-6 w-11 rounded-full transition-colors overflow-hidden ${theme === 'dark' ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-600'}`}
             >
               <span className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${theme === 'dark' ? 'translate-x-5' : 'translate-x-0'}`} />
             </button>
