@@ -12,6 +12,18 @@ const navItems = [
   { href: '/settings', label: '설정', icon: Settings },
 ];
 
+function isActiveTab(href: string, pathname: string): boolean {
+  if (href === '/') {
+    // 홈: 루트 또는 일반 덱 퀴즈
+    return pathname === '/' || (pathname.startsWith('/quiz/') && pathname !== '/quiz/wrong-notes');
+  }
+  if (href === '/wrong-notes') {
+    // 오답: 오답 페이지 또는 오답 퀴즈
+    return pathname === '/wrong-notes' || pathname === '/quiz/wrong-notes';
+  }
+  return pathname.startsWith(href);
+}
+
 export function BottomNav() {
   const pathname = usePathname();
 
@@ -19,7 +31,7 @@ export function BottomNav() {
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background safe-area-bottom md:hidden">
       <div className="flex h-16 items-center justify-around">
         {navItems.map(({ href, label, icon: Icon }) => {
-          const isActive = pathname === href;
+          const isActive = isActiveTab(href, pathname);
           return (
             <Link
               key={href}
