@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { AlertCircle, Play, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { FuriganaText } from '@/components/ui/FuriganaText';
 import { useSettingsStore } from '@/store/settings-store';
 import { storage } from '@/lib/storage';
 import type { Word, WrongNote } from '@/lib/types';
@@ -110,15 +109,13 @@ export default function WrongNotesPage() {
             if (!word) return null;
             return (
               <Card key={note.wordId}>
-                <CardContent className="flex items-center justify-between p-4">
-                  <div className="min-w-0 flex-1">
-                    <FuriganaText
-                      japanese={word.japanese}
-                      reading={word.reading}
-                      show={showFurigana}
-                      className="font-medium"
-                    />
-                    <p className="text-sm text-muted-foreground">{word.korean}</p>
+                <CardContent className="flex items-start justify-between p-4">
+                  <div className="min-w-0 flex-1 overflow-hidden">
+                    {showFurigana && word.reading && word.reading !== word.japanese && (
+                      <p className="break-all text-xs text-muted-foreground leading-relaxed">{word.reading}</p>
+                    )}
+                    <p className="break-all font-medium">{word.japanese}</p>
+                    <p className="break-words text-sm text-muted-foreground">{word.korean}</p>
                   </div>
                   <div className="flex items-center gap-3 shrink-0 ml-2">
                     <div className="text-right text-xs text-red-500">
