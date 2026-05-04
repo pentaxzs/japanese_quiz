@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Noto_Sans_JP } from 'next/font/google';
+import { Noto_Sans_JP, Black_Han_Sans } from 'next/font/google';
 import './globals.css';
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 import { ThemeProvider } from '@/components/layout/ThemeProvider';
@@ -9,6 +9,13 @@ const notoSansJP = Noto_Sans_JP({
   variable: '--font-noto-jp',
   subsets: ['latin'],
   weight: ['400', '500', '700'],
+  display: 'swap',
+});
+
+const blackHanSans = Black_Han_Sans({
+  variable: '--font-black-han-sans',
+  subsets: ['latin'],
+  weight: '400',
   display: 'swap',
 });
 
@@ -35,7 +42,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko" className={`${notoSansJP.variable} h-full`} suppressHydrationWarning>
+    <html lang="ko" className={`${notoSansJP.variable} ${blackHanSans.variable} h-full`} suppressHydrationWarning>
       <body className="min-h-full bg-background font-sans antialiased">
         <ThemeProvider>
           <ResponsiveLayout>{children}</ResponsiveLayout>
