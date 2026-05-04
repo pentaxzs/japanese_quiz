@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { CheckCircle, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { FuriganaText } from '@/components/ui/FuriganaText';
 import { useSettingsStore } from '@/store/settings-store';
 import type { QuizQuestion } from '@/lib/types';
 
@@ -37,12 +36,12 @@ export function QuizCard({ question, onAnswered }: QuizCardProps) {
           {isJpPrompt ? '일본어 → 한국어' : '한국어 → 일본어'}
         </p>
         {isJpPrompt ? (
-          <FuriganaText
-            japanese={question.word.japanese}
-            reading={question.word.reading}
-            show={showFurigana}
-            className="break-all font-bold leading-relaxed text-xl"
-          />
+          <div>
+            {showFurigana && question.word.reading && question.word.reading !== question.word.japanese && (
+              <p className="break-all text-xs text-indigo-300 mb-1 leading-relaxed">{question.word.reading}</p>
+            )}
+            <p className="break-all font-bold leading-relaxed text-xl">{question.word.japanese}</p>
+          </div>
         ) : (
           <p className="break-words font-bold leading-relaxed text-xl">{question.word.korean}</p>
         )}
@@ -60,12 +59,12 @@ export function QuizCard({ question, onAnswered }: QuizCardProps) {
         {/* Actual answer underneath */}
         <div className="border-2 border-muted p-6 text-center min-h-[120px] flex flex-col items-center justify-center">
           {!isJpPrompt ? (
-            <FuriganaText
-              japanese={question.word.japanese}
-              reading={question.word.reading}
-              show={showFurigana}
-              className="break-all font-bold leading-relaxed text-xl"
-            />
+            <div>
+              {showFurigana && question.word.reading && question.word.reading !== question.word.japanese && (
+                <p className="break-all text-xs text-indigo-400 mb-1 leading-relaxed">{question.word.reading}</p>
+              )}
+              <p className="break-all font-bold leading-relaxed text-xl">{question.word.japanese}</p>
+            </div>
           ) : (
             <p className="break-words font-bold leading-relaxed text-xl">{question.word.korean}</p>
           )}
