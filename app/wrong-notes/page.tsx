@@ -14,9 +14,10 @@ type FilterType = 'all' | 'word' | 'sentence';
 
 export default function WrongNotesPage() {
   const router = useRouter();
-  const { showFurigana } = useSettingsStore();
+  const { showFurigana, quizLanguage } = useSettingsStore();
   const [wrongNotes, setWrongNotes] = useState<WrongNote[]>([]);
   const [words, setWords] = useState<Map<string, Word>>(new Map());
+  const [deckLanguages, setDeckLanguages] = useState<Map<string, string>>(new Map());
   const [filter, setFilter] = useState<FilterType>('all');
 
   useEffect(() => {
@@ -28,11 +29,15 @@ export default function WrongNotesPage() {
     setWrongNotes(notes);
 
     const wordMap = new Map<string, Word>();
+    const deckLangMap = new Map<string, string>();
     for (const note of notes) {
       const deckWords = await storage.getWordsByDeckId(note.deckId);
       for (const w of deckWords) wordMap.set(w.id, w);
+      const deck = await storage.getDeck(note.deckId);
+      if (deck) deckLangMap.set(note.deckId, deck.language ?? 'japanese');
     }
     setWords(wordMap);
+    setDeckLanguages(deckLangMap);
   }
 
   async function handleDelete(wordId: string) {
@@ -48,10 +53,13 @@ export default function WrongNotesPage() {
     router.push('/quiz/wrong-notes');
   }
 
+  const modeLabel = quizLanguage === 'english' ? '영어' : '일본어';
+
   const filteredNotes = wrongNotes
     .filter((note) => {
       const word = words.get(note.wordId);
       if (!word) return false;
+      if ((deckLanguages.get(note.deckId) ?? 'japanese') !== quizLanguage) return false;
       if (filter === 'all') return true;
       return word.type === filter;
     })
@@ -66,7 +74,10 @@ export default function WrongNotesPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-6">
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-lg font-semibold">오답 노트</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-lg font-semibold">오답 노트</h1>
+          <span className="rounded-full bg-primary/15 px-2 py-0.5 text-xs font-medium text-primary">{modeLabel}</span>
+        </div>
         {filteredNotes.length > 0 && (
           <Button
             size="sm"

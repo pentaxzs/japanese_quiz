@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { extractFromImage } from '@/lib/claude';
+import type { QuizLanguage } from '@/lib/types';
 
 export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
   try {
-    const { image, mimeType } = await req.json();
+    const { image, mimeType, language } = await req.json();
     const apiKey = req.headers.get('x-api-key') || undefined;
+    const lang: QuizLanguage = language === 'english' ? 'english' : 'japanese';
 
     if (!image || typeof image !== 'string') {
       return NextResponse.json({ error: '이미지 데이터가 필요합니다.' }, { status: 400 });
@@ -17,7 +19,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: '지원하지 않는 이미지 형식입니다.' }, { status: 400 });
     }
 
-    const data = await extractFromImage(image, mimeType, apiKey);
+    const data = await extractFromImage(image, mimeType, apiKey, lang);
     return NextResponse.json({ success: true, data });
   } catch (err) {
     console.error('[extract]', err);

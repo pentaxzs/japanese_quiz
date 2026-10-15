@@ -6,17 +6,19 @@ import { Upload, Camera, Loader2, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { apiFetch } from '@/lib/api-client';
+import type { QuizLanguage } from '@/lib/types';
 
 interface FileUploaderProps {
   onExtracted: (result: {
     words: Array<{ japanese: string; reading: string; korean: string }>;
     sentences: Array<{ japanese: string; reading: string; korean: string }>;
   }) => void;
+  language?: QuizLanguage;
 }
 
 const MAX_PDF_PAGES = 5;
 
-export function FileUploader({ onExtracted }: FileUploaderProps) {
+export function FileUploader({ onExtracted, language = 'japanese' }: FileUploaderProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('AI가 분석 중입니다...');
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +26,7 @@ export function FileUploader({ onExtracted }: FileUploaderProps) {
   async function extractFromBase64(base64Data: string, mimeType: string) {
     const res = await apiFetch('/api/extract', {
       method: 'POST',
-      body: { image: base64Data, mimeType },
+      body: { image: base64Data, mimeType, language },
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));

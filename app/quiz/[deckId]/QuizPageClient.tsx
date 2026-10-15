@@ -13,7 +13,7 @@ import { useSettingsStore } from '@/store/settings-store';
 import { storage } from '@/lib/storage';
 import { generateQuizQuestions, createQuizSession } from '@/lib/quiz-engine';
 import { AddWordDialog } from '@/components/deck/AddWordDialog';
-import type { Word } from '@/lib/types';
+import type { Word, QuizLanguage } from '@/lib/types';
 import { Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -31,6 +31,7 @@ export function QuizPageClient({ deckId }: Props) {
   const [mode, setMode] = useState<Mode>('select');
   const [words, setWords] = useState<Word[]>([]);
   const [deckName, setDeckName] = useState('');
+  const [deckLanguage, setDeckLanguage] = useState<QuizLanguage>('japanese');
   const [quizMode, setQuizMode] = useState<'words' | 'sentences' | 'mixed'>('mixed');
 
   useEffect(() => {
@@ -39,7 +40,10 @@ export function QuizPageClient({ deckId }: Props) {
         storage.getDeck(deckId),
         storage.getWordsByDeckId(deckId),
       ]);
-      if (deck) setDeckName(deck.name);
+      if (deck) {
+        setDeckName(deck.name);
+        setDeckLanguage(deck.language ?? 'japanese');
+      }
       setWords(ws);
     }
     load();
@@ -137,7 +141,7 @@ export function QuizPageClient({ deckId }: Props) {
             <ProgressBar current={session.currentIndex} total={session.questions.length} />
           </div>
         </div>
-        <QuizCard key={`${current.word.id}-${session.currentIndex}`} question={current} onAnswered={handleAnswered} />
+        <QuizCard key={`${current.word.id}-${session.currentIndex}`} question={current} onAnswered={handleAnswered} language={deckLanguage} />
       </div>
     );
   }
@@ -156,6 +160,7 @@ export function QuizPageClient({ deckId }: Props) {
         <AddWordDialog
           deckId={deckId}
           onSaved={(word) => setWords((prev) => [...prev, word])}
+          language={deckLanguage}
         />
       </div>
 
@@ -164,13 +169,13 @@ export function QuizPageClient({ deckId }: Props) {
         {(['words', 'sentences', 'mixed'] as const).map((m) => (
           <button
             key={m}
-            className={`w-full rounded-xl border p-4 text-left transition-colors ${quizMode === m ? 'border-indigo-500 bg-indigo-50 text-foreground dark:bg-indigo-950 dark:text-indigo-100' : 'border-border hover:border-indigo-300'}`}
+            className={`w-full rounded-xl border p-4 text-left transition-colors ${quizMode === m ? 'border-primary bg-primary/15 text-foreground' : 'border-border hover:border-primary/40'}`}
             onClick={() => setQuizMode(m)}
           >
             <p className="font-medium">
               {m === 'words' ? '단어만' : m === 'sentences' ? '문장만' : '혼합'}
             </p>
-            <p className="text-xs text-muted-foreground">
+            <p className={`text-xs ${quizMode === m ? 'text-foreground/70' : 'text-muted-foreground'}`}>
               {m === 'words' ? '단어 위주 학습' : m === 'sentences' ? '문장 작문 연습' : '단어+문장 랜덤'}
             </p>
           </button>

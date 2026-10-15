@@ -15,7 +15,7 @@ import { toast } from 'sonner';
 const BACKUP_VERSION = 1;
 
 export default function SettingsPage() {
-  const { showFurigana, quizDirection, toggleFurigana, setQuizDirection, apiKey, setApiKey } =
+  const { showFurigana, quizDirection, toggleFurigana, setQuizDirection, apiKey, setApiKey, quizLanguage } =
     useSettingsStore();
   const { theme, setTheme } = useTheme();
   const quota = useStorageQuota();
@@ -176,8 +176,8 @@ export default function SettingsPage() {
               className="rounded-md border bg-background px-2 py-1 text-sm"
             >
               <option value="random">랜덤</option>
-              <option value="jp-to-kr">일어→한국어</option>
-              <option value="kr-to-jp">한국어→일어</option>
+              <option value="jp-to-kr">{quizLanguage === 'english' ? '영어→한국어' : '일어→한국어'}</option>
+              <option value="kr-to-jp">{quizLanguage === 'english' ? '한국어→영어' : '한국어→일어'}</option>
             </select>
           </div>
         </CardContent>

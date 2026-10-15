@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
-import { Plus, BookOpen, Play, MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import { Plus, BookOpen, Play, MoreVertical, Pencil, Trash2, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -24,15 +24,16 @@ import { ExtractionPreview } from '@/components/upload/ExtractionPreview';
 import { useDeckStore } from '@/store/deck-store';
 import { useSettingsStore } from '@/store/settings-store';
 import { storage } from '@/lib/storage';
-import type { Deck, Word, ExtractionResult } from '@/lib/types';
+import type { Deck, Word, ExtractionResult, QuizLanguage } from '@/lib/types';
 import { toast } from 'sonner';
 
-const EMOJIS = ['🍙', '🍜', '🍣', '🇯🇵', '🍥'];
+const EMOJIS_JP = ['🍙', '🍜', '🍣', '🇯🇵', '🍥'];
+const EMOJIS_EN = ['📚', '✏️', '🌍', '💬', '🎓'];
 
 export default function HomePage() {
   const router = useRouter();
   const { decks, setDecks, addDeck, updateDeck, removeDeck } = useDeckStore();
-  const { apiKey } = useSettingsStore();
+  const { apiKey, quizLanguage, setQuizLanguage, fontSize, setFontSize } = useSettingsStore();
   const [extractionResult, setExtractionResult] = useState<ExtractionResult | null>(null);
   const [showUploader, setShowUploader] = useState(false);
   const [deckStats, setDeckStats] = useState<Record<string, number | null>>({});
@@ -41,8 +42,9 @@ export default function HomePage() {
   const [emoji, setEmoji] = useState('');
 
   useEffect(() => {
-    setEmoji(EMOJIS[Math.floor(Math.random() * EMOJIS.length)]);
-  }, []);
+    const pool = quizLanguage === 'english' ? EMOJIS_EN : EMOJIS_JP;
+    setEmoji(pool[Math.floor(Math.random() * pool.length)]);
+  }, [quizLanguage]);
 
   useEffect(() => {
     storage.getDecks().then(setDecks);
@@ -91,6 +93,7 @@ export default function HomePage() {
       id: deckId,
       userId: 'local',
       name: deckName.trim(),
+      language: quizLanguage,
       createdAt: now,
       updatedAt: now,
       wordCount: words.length,
@@ -120,10 +123,40 @@ export default function HomePage() {
     toast.success(`"${deck.name}"이 삭제되었습니다.`);
   }
 
+  const visibleDecks = decks
+    .filter((d) => (d.language ?? 'japanese') === quizLanguage)
+    .sort((a, b) => b.createdAt - a.createdAt);
+
   return (
     <div className="mx-auto max-w-2xl px-4 py-6">
       <div className="mb-6 flex items-center justify-between md:hidden">
-        <h1 className="text-3xl text-slate-100" style={{ fontFamily: 'var(--font-black-han-sans)' }}>{emoji} 일본어 퀴즈</h1>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="flex items-center gap-2 text-left outline-none">
+              <span
+                className="text-3xl text-foreground"
+                style={{ fontFamily: 'var(--font-black-han-sans)' }}
+              >
+                {emoji} {quizLanguage === 'english' ? '영어 퀴즈' : '일본어 퀴즈'}
+              </span>
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-foreground/10">
+                <ChevronDown className="h-4 w-4 text-foreground" />
+              </span>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-52">
+            {([['japanese', '🇯🇵 일본어 퀴즈'], ['english', '🌍 영어 퀴즈']] as [QuizLanguage, string][]).map(([lang, label]) => (
+              <DropdownMenuItem
+                key={lang}
+                className={`gap-2 ${quizLanguage === lang ? 'font-semibold text-indigo-600 dark:text-indigo-300' : ''}`}
+                onClick={() => { setQuizLanguage(lang); setExtractionResult(null); setShowUploader(false); }}
+              >
+                {label}
+                {quizLanguage === lang && <span className="ml-auto text-indigo-500">✓</span>}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {!apiKey && (
@@ -143,7 +176,7 @@ export default function HomePage() {
                 <CardTitle className="text-base">학습 자료 업로드</CardTitle>
               </CardHeader>
               <CardContent>
-                <FileUploader onExtracted={setExtractionResult} />
+                <FileUploader onExtracted={setExtractionResult} language={quizLanguage} />
                 <Button
                   variant="ghost"
                   size="sm"
@@ -178,11 +211,11 @@ export default function HomePage() {
         </Card>
       )}
 
-      {decks.length > 0 && (
+      {visibleDecks.length > 0 && (
         <section>
           <h2 className="mb-3 text-sm font-semibold text-muted-foreground">단어장</h2>
           <div className="grid gap-3 sm:grid-cols-2">
-            {decks.map((deck) => {
+            {visibleDecks.map((deck) => {
               const accuracy = deckStats[deck.id];
               return (
                 <Card key={deck.id} className="transition-shadow hover:shadow-md">
@@ -250,12 +283,32 @@ export default function HomePage() {
         </section>
       )}
 
-      {decks.length === 0 && !showUploader && !extractionResult && (
+      {visibleDecks.length === 0 && !showUploader && !extractionResult && (
         <div className="py-16 text-center text-muted-foreground">
           <BookOpen className="mx-auto mb-3 h-12 w-12 opacity-30" />
           <p className="text-sm">학습 자료를 업로드하여 시작하세요</p>
         </div>
       )}
+
+      {/* Font size toggle — mobile only (md: hidden, PC has it in sidebar) */}
+      <div className="mt-8 flex items-center justify-between md:hidden">
+        <p className="text-sm text-muted-foreground">폰트 크기</p>
+        <div className="flex rounded-lg border border-border overflow-hidden">
+          {(['default', 'large'] as const).map((size) => (
+            <button
+              key={size}
+              onClick={() => setFontSize(size)}
+              className={`px-4 py-1.5 text-sm font-medium transition-colors ${
+                fontSize === size
+                  ? 'bg-primary text-white'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {size === 'default' ? '기본' : '크게'}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {/* Rename dialog */}
       <Dialog open={!!renameTarget} onOpenChange={(open) => !open && setRenameTarget(null)}>

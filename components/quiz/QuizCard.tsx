@@ -5,14 +5,15 @@ import { CheckCircle, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useSettingsStore } from '@/store/settings-store';
-import type { QuizQuestion } from '@/lib/types';
+import type { QuizQuestion, QuizLanguage } from '@/lib/types';
 
 interface QuizCardProps {
   question: QuizQuestion;
   onAnswered: (isCorrect: boolean, userAnswer: string) => void;
+  language?: QuizLanguage;
 }
 
-export function QuizCard({ question, onAnswered }: QuizCardProps) {
+export function QuizCard({ question, onAnswered, language = 'japanese' }: QuizCardProps) {
   const [revealed, setRevealed] = useState(false);
   const [answered, setAnswered] = useState(false);
   const { showFurigana } = useSettingsStore();
@@ -31,14 +32,16 @@ export function QuizCard({ question, onAnswered }: QuizCardProps) {
   return (
     <div className="flex flex-col gap-6">
       {/* Question */}
-      <div className="rounded-2xl bg-indigo-50 dark:bg-indigo-950 p-6 text-center">
-        <p className="text-xs font-medium uppercase tracking-wide text-indigo-400 mb-2">
-          {isJpPrompt ? '일본어 → 한국어' : '한국어 → 일본어'}
+      <div className="rounded-2xl bg-primary/10 p-6 text-center">
+        <p className="text-xs font-medium uppercase tracking-wide text-primary mb-2">
+          {language === 'english'
+            ? (isJpPrompt ? '영어 → 한국어' : '한국어 → 영어')
+            : (isJpPrompt ? '일본어 → 한국어' : '한국어 → 일본어')}
         </p>
         {isJpPrompt ? (
           <div>
             {showFurigana && question.word.reading && question.word.reading !== question.word.japanese && (
-              <p className="break-all text-xs text-indigo-300 mb-1 leading-relaxed">{question.word.reading}</p>
+              <p className="break-all text-xs text-foreground/70 mb-1 leading-relaxed">{question.word.reading}</p>
             )}
             <p className="break-all font-bold leading-relaxed text-xl">{question.word.japanese}</p>
           </div>
@@ -61,7 +64,7 @@ export function QuizCard({ question, onAnswered }: QuizCardProps) {
           {!isJpPrompt ? (
             <div className="w-full">
               {showFurigana && question.word.reading && question.word.reading !== question.word.japanese && (
-                <p className="break-all text-xs text-indigo-400 mb-1 leading-relaxed">{question.word.reading}</p>
+                <p className="break-all text-xs text-foreground/70 mb-1 leading-relaxed">{question.word.reading}</p>
               )}
               <p className="break-all font-bold leading-relaxed text-xl">{question.word.japanese}</p>
             </div>

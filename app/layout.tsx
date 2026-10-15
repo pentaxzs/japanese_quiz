@@ -3,6 +3,7 @@ import { Noto_Sans_JP, Black_Han_Sans } from 'next/font/google';
 import './globals.css';
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 import { ThemeProvider } from '@/components/layout/ThemeProvider';
+import { RandomThemeProvider } from '@/components/layout/RandomThemeProvider';
 import { Toaster } from '@/components/ui/sonner';
 
 const notoSansJP = Noto_Sans_JP({
@@ -45,8 +46,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ko" className={`${notoSansJP.variable} ${blackHanSans.variable} h-full`} suppressHydrationWarning>
       <body className="min-h-full bg-background font-sans antialiased">
         <ThemeProvider>
-          <ResponsiveLayout>{children}</ResponsiveLayout>
-          <Toaster />
+          <RandomThemeProvider>
+            <ResponsiveLayout>{children}</ResponsiveLayout>
+            <Toaster />
+          </RandomThemeProvider>
         </ThemeProvider>
       </body>
     </html>

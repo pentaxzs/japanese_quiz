@@ -38,12 +38,12 @@ export function BottomNav() {
               href={href}
               className={cn(
                 'flex min-w-[44px] flex-col items-center justify-center gap-1 px-3 py-2 text-xs transition-colors',
-                isActive ? 'text-indigo-600' : 'text-muted-foreground hover:text-foreground'
+                isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
               )}
             >
               <span className={cn(
                 'flex items-center justify-center rounded-full w-10 h-6 transition-colors',
-                isActive && 'bg-indigo-100 dark:bg-indigo-950'
+                isActive && 'bg-primary/15'
               )}>
                 <Icon className="h-5 w-5" />
               </span>

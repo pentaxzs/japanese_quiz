@@ -1,3 +1,5 @@
+export type QuizLanguage = 'japanese' | 'english';
+
 export interface WordStats {
   attempts: number;
   correct: number;
@@ -24,6 +26,7 @@ export interface Deck {
   userId: string;
   name: string;
   description?: string;
+  language?: QuizLanguage;
   createdAt: number;
   updatedAt: number;
   wordCount: number;

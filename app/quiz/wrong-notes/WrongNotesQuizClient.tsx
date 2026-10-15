@@ -20,13 +20,27 @@ export function WrongNotesQuizClient() {
   const router = useRouter();
   const { session, setSession, clearSession, submitAnswer, nextQuestion } = useQuizStore();
   const { addWrongNote, updateWrongNote, removeWrongNote } = useWrongNoteStore();
-  const { quizDirection } = useSettingsStore();
+  const { quizDirection, quizLanguage } = useSettingsStore();
   const [mode, setMode] = useState<Mode>('quiz');
   const [words, setWords] = useState<Word[]>([]);
 
   useEffect(() => {
     async function load() {
-      const notes = await storage.getWrongNotes();
+      const allNotes = await storage.getWrongNotes();
+      if (allNotes.length === 0) {
+        router.replace('/wrong-notes');
+        return;
+      }
+      // Filter notes by current language mode
+      const deckCache = new Map<string, string>();
+      const notes = [];
+      for (const note of allNotes) {
+        if (!deckCache.has(note.deckId)) {
+          const deck = await storage.getDeck(note.deckId);
+          deckCache.set(note.deckId, deck?.language ?? 'japanese');
+        }
+        if (deckCache.get(note.deckId) === quizLanguage) notes.push(note);
+      }
       if (notes.length === 0) {
         router.replace('/wrong-notes');
         return;
@@ -146,6 +160,7 @@ export function WrongNotesQuizClient() {
         key={`${current.word.id}-${session.currentIndex}`}
         question={current}
         onAnswered={handleAnswered}
+        language={quizLanguage}
       />
     </div>
   );

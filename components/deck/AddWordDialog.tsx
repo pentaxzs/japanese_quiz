@@ -13,15 +13,16 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { storage } from '@/lib/storage';
-import type { Word } from '@/lib/types';
+import type { Word, QuizLanguage } from '@/lib/types';
 import { toast } from 'sonner';
 
 interface AddWordDialogProps {
   deckId: string;
   onSaved: (word: Word) => void;
+  language?: QuizLanguage;
 }
 
-export function AddWordDialog({ deckId, onSaved }: AddWordDialogProps) {
+export function AddWordDialog({ deckId, onSaved, language = 'japanese' }: AddWordDialogProps) {
   const [open, setOpen] = useState(false);
   const [japanese, setJapanese] = useState('');
   const [reading, setReading] = useState('');
@@ -94,19 +95,21 @@ export function AddWordDialog({ deckId, onSaved }: AddWordDialogProps) {
             ))}
           </div>
           <Input
-            placeholder="일본어 (예: 勉強)"
+            placeholder={language === 'english' ? '영어 (예: study)' : '일본어 (예: 勉強)'}
             value={japanese}
             onChange={(e) => setJapanese(e.target.value)}
-            lang="ja"
+            lang={language === 'english' ? 'en' : 'ja'}
             autoComplete="off"
           />
-          <Input
-            placeholder="읽기 (예: べんきょう) — 비워두면 일본어와 동일"
-            value={reading}
-            onChange={(e) => setReading(e.target.value)}
-            lang="ja"
-            autoComplete="off"
-          />
+          {language === 'japanese' && (
+            <Input
+              placeholder="읽기 (예: べんきょう) — 비워두면 일본어와 동일"
+              value={reading}
+              onChange={(e) => setReading(e.target.value)}
+              lang="ja"
+              autoComplete="off"
+            />
+          )}
           <Input
             placeholder="한국어 (예: 공부)"
             value={korean}
