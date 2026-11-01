@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
-import { Plus, BookOpen, Play, MoreVertical, Pencil, Trash2, ChevronDown } from 'lucide-react';
+import { Play, MoreVertical, Pencil, Trash2, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -20,6 +20,7 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import { DeckCard } from '@/components/deck/DeckCard';
+import { NewDeckCard } from '@/components/deck/NewDeckCard';
 import { FileUploader } from '@/components/upload/FileUploader';
 import { ExtractionPreview } from '@/components/upload/ExtractionPreview';
 import { useDeckStore } from '@/store/deck-store';
@@ -160,44 +161,36 @@ export default function HomePage() {
         </DropdownMenu>
       </div>
 
-      {!apiKey && (
-        <div className="mb-4 rounded-xl border border-mark/30 bg-mark/10 px-4 py-3 text-sm text-foreground">
-          <strong>API 키 필요:</strong> 설정 페이지에서 Anthropic API 키를 입력해야 이미지 업로드 기능을 사용할 수 있습니다.{' '}
-          <button className="underline font-medium" onClick={() => router.push('/settings')}>
-            설정으로 이동
-          </button>
-        </div>
-      )}
-
-      {!extractionResult && (
-        <div className="mb-6">
-          {showUploader ? (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">학습 자료 업로드</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <FileUploader onExtracted={setExtractionResult} language={quizLanguage} />
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="mt-3 w-full"
-                  onClick={() => setShowUploader(false)}
-                >
-                  취소
-                </Button>
-              </CardContent>
-            </Card>
-          ) : (
+      {/*
+        API 키 배너는 상단 고정에서 내렸다. 키는 단어를 뽑아올 때만 필요한데
+        늘 떠 있어서 첫 화면에서 가장 눈에 띄는 것이 "뭔가 빠졌다"는 경고였다.
+        이제 업로드를 열었을 때만 안내한다.
+      */}
+      {!extractionResult && showUploader && (
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="text-base">새 단어장 만들기</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {!apiKey && (
+              <div className="mb-3 rounded-lg border border-mark/30 bg-mark/10 px-3 py-2.5 text-xs leading-relaxed text-foreground">
+                단어를 뽑아오려면 Anthropic API 키가 필요합니다.{' '}
+                <button className="font-medium underline" onClick={() => router.push('/settings')}>
+                  설정으로 이동
+                </button>
+              </div>
+            )}
+            <FileUploader onExtracted={setExtractionResult} language={quizLanguage} />
             <Button
-              className="h-12 w-full gap-2"
-              onClick={() => setShowUploader(true)}
+              variant="ghost"
+              size="sm"
+              className="mt-3 w-full"
+              onClick={() => setShowUploader(false)}
             >
-              <Plus className="h-5 w-5" />
-              학습 자료 업로드
+              취소
             </Button>
-          )}
-        </div>
+          </CardContent>
+        </Card>
       )}
 
       {extractionResult && (
@@ -212,10 +205,12 @@ export default function HomePage() {
         </Card>
       )}
 
-      {visibleDecks.length > 0 && (
-        <section>
-          <h2 className="mb-3 text-sm font-semibold text-muted-foreground">단어장</h2>
+      <section>
+        <h2 className="mb-3 text-sm font-semibold text-muted-foreground">단어장</h2>
           <div className="grid gap-4 sm:grid-cols-2">
+            {!showUploader && !extractionResult && (
+              <NewDeckCard onClick={() => setShowUploader(true)} />
+            )}
             {visibleDecks.map((deck) => {
               const accuracy = deckStats[deck.id];
               return (
@@ -261,15 +256,19 @@ export default function HomePage() {
               );
             })}
           </div>
-        </section>
-      )}
 
-      {visibleDecks.length === 0 && !showUploader && !extractionResult && (
-        <div className="py-16 text-center text-muted-foreground">
-          <BookOpen className="mx-auto mb-3 h-12 w-12 opacity-30" />
-          <p className="text-sm">학습 자료를 업로드하여 시작하세요</p>
-        </div>
-      )}
+          {/*
+            빈 상태가 따로 없다. 빈 종이 카드가 곧 입구이자 빈 상태다.
+            이전에는 배너·버튼·안내문이 같은 말을 세 번 했다.
+          */}
+          {visibleDecks.length === 0 && !showUploader && !extractionResult && (
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              아직 단어장이 없습니다.
+              <br />
+              교재를 찍으면 단어를 뽑아 만들어 드립니다.
+            </p>
+          )}
+        </section>
 
       {/* Font size toggle — mobile only (md: hidden, PC has it in sidebar) */}
       <div className="mt-8 flex items-center justify-between md:hidden">
