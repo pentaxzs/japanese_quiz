@@ -27,7 +27,7 @@ export function QuizResult({ session, onRetry, onWrongOnly }: QuizResultProps) {
             score >= 80 ? 'h-16 w-16 text-yellow-500' : 'h-16 w-16 text-muted-foreground'
           }
         />
-        <p className="text-5xl font-bold text-indigo-600">{score}점</p>
+        <p className="text-5xl font-bold text-mark">{score}점</p>
         <p className="text-muted-foreground">
           {correct}개 정답 / {wrong}개 오답
         </p>
@@ -55,7 +55,7 @@ export function QuizResult({ session, onRetry, onWrongOnly }: QuizResultProps) {
       )}
 
       <div className="space-y-2">
-        <Button className="w-full gap-2 bg-indigo-600 hover:bg-indigo-700 h-12" onClick={onRetry}>
+        <Button className="h-12 w-full gap-2" onClick={onRetry}>
           <RotateCcw className="h-4 w-4" />
           다시 풀기
         </Button>

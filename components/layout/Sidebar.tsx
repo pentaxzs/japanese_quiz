@@ -43,8 +43,8 @@ export function Sidebar() {
               <h1 className="text-lg font-bold text-foreground">
                 {emoji} {quizLanguage === 'english' ? '영어 퀴즈' : '일본어 퀴즈'}
               </h1>
-              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900">
-                <ChevronDown className="h-3 w-3 text-indigo-600 dark:text-indigo-300" />
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-mark/15">
+                <ChevronDown className="h-3 w-3 text-mark" />
               </span>
             </button>
           </DropdownMenuTrigger>
@@ -52,11 +52,11 @@ export function Sidebar() {
             {([['japanese', '🇯🇵 일본어 퀴즈'], ['english', '🌍 영어 퀴즈']] as [QuizLanguage, string][]).map(([lang, label]) => (
               <DropdownMenuItem
                 key={lang}
-                className={`gap-2 ${quizLanguage === lang ? 'font-semibold text-indigo-600 dark:text-indigo-300' : ''}`}
+                className={`gap-2 ${quizLanguage === lang ? 'font-semibold text-mark' : ''}`}
                 onClick={() => setQuizLanguage(lang)}
               >
                 {label}
-                {quizLanguage === lang && <span className="ml-auto text-indigo-500">✓</span>}
+                {quizLanguage === lang && <span className="ml-auto text-mark">✓</span>}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>

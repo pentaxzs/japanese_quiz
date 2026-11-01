@@ -148,11 +148,11 @@ export default function HomePage() {
             {([['japanese', '🇯🇵 일본어 퀴즈'], ['english', '🌍 영어 퀴즈']] as [QuizLanguage, string][]).map(([lang, label]) => (
               <DropdownMenuItem
                 key={lang}
-                className={`gap-2 ${quizLanguage === lang ? 'font-semibold text-indigo-600 dark:text-indigo-300' : ''}`}
+                className={`gap-2 ${quizLanguage === lang ? 'font-semibold text-mark' : ''}`}
                 onClick={() => { setQuizLanguage(lang); setExtractionResult(null); setShowUploader(false); }}
               >
                 {label}
-                {quizLanguage === lang && <span className="ml-auto text-indigo-500">✓</span>}
+                {quizLanguage === lang && <span className="ml-auto text-mark">✓</span>}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
@@ -160,7 +160,7 @@ export default function HomePage() {
       </div>
 
       {!apiKey && (
-        <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 dark:bg-amber-950 dark:border-amber-800 px-4 py-3 text-sm text-amber-800 dark:text-amber-200">
+        <div className="mb-4 rounded-xl border border-mark/30 bg-mark/10 px-4 py-3 text-sm text-foreground">
           <strong>API 키 필요:</strong> 설정 페이지에서 Anthropic API 키를 입력해야 이미지 업로드 기능을 사용할 수 있습니다.{' '}
           <button className="underline font-medium" onClick={() => router.push('/settings')}>
             설정으로 이동
@@ -189,7 +189,7 @@ export default function HomePage() {
             </Card>
           ) : (
             <Button
-              className="w-full gap-2 bg-indigo-600 hover:bg-indigo-700 h-12"
+              className="h-12 w-full gap-2"
               onClick={() => setShowUploader(true)}
             >
               <Plus className="h-5 w-5" />
@@ -229,7 +229,7 @@ export default function HomePage() {
                       <div className="flex items-center gap-2 mt-0.5">
                         <p className="text-xs text-muted-foreground">{deck.wordCount}개</p>
                         {accuracy !== null && accuracy !== undefined && (
-                          <p className="text-xs text-indigo-500 font-medium">정답률 {accuracy}%</p>
+                          <p className="text-xs text-mark font-medium">정답률 {accuracy}%</p>
                         )}
                       </div>
                     </div>
@@ -237,7 +237,7 @@ export default function HomePage() {
                     {/* Play button */}
                     <button
                       onClick={() => router.push(`/quiz/${deck.id}`)}
-                      className="shrink-0 text-indigo-500 hover:text-indigo-700 p-1 transition-colors"
+                      className="shrink-0 text-mark hover:opacity-80 p-1 transition-colors"
                     >
                       <Play className="h-5 w-5" />
                     </button>
@@ -324,7 +324,7 @@ export default function HomePage() {
               autoFocus
             />
             <Button
-              className="w-full bg-indigo-600 hover:bg-indigo-700"
+              className="w-full"
               onClick={handleRename}
               disabled={!renameValue.trim() || renameValue.trim() === renameTarget?.name}
             >

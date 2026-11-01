@@ -129,15 +129,15 @@ export function FileUploader({ onExtracted, language = 'japanese' }: FileUploade
         className={cn(
           'flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 text-center transition-colors',
           isDragActive
-            ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-950'
-            : 'border-muted-foreground/30 hover:border-indigo-400 hover:bg-accent',
+            ? 'border-mark bg-mark/10'
+            : 'border-muted-foreground/30 hover:border-mark/50 hover:bg-accent',
           isLoading && 'pointer-events-none opacity-60'
         )}
       >
         <input {...getInputProps()} />
         {isLoading ? (
           <>
-            <Loader2 className="mb-3 h-10 w-10 animate-spin text-indigo-500" />
+            <Loader2 className="mb-3 h-10 w-10 animate-spin text-mark" />
             <p className="text-sm font-medium">{loadingMessage}</p>
           </>
         ) : (
@@ -214,7 +214,7 @@ export function FileUploader({ onExtracted, language = 'japanese' }: FileUploade
       </div>
 
       {error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>
+        <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>
       )}
     </div>
   );

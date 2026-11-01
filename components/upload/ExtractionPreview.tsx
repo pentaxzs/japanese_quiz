@@ -73,7 +73,7 @@ export function ExtractionPreview({ result, onSave, onCancel }: ExtractionPrevie
       </div>
 
       <Button
-        className="w-full gap-2 bg-indigo-600 hover:bg-indigo-700"
+        className="w-full gap-2"
         onClick={() => onSave(deckName, editedResult)}
         disabled={total === 0 || !deckName.trim()}
       >

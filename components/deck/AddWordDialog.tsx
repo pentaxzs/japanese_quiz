@@ -86,8 +86,8 @@ export function AddWordDialog({ deckId, onSaved, language = 'japanese' }: AddWor
                 onClick={() => setType(t)}
                 className={`flex-1 rounded-lg border py-2 text-sm transition-colors ${
                   type === t
-                    ? 'border-indigo-500 bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300'
-                    : 'border-border hover:border-indigo-300'
+                    ? 'border-mark bg-mark/10 text-foreground'
+                    : 'border-border hover:border-mark/50'
                 }`}
               >
                 {t === 'word' ? '단어' : '문장'}
@@ -118,7 +118,7 @@ export function AddWordDialog({ deckId, onSaved, language = 'japanese' }: AddWor
             autoComplete="off"
           />
           <Button
-            className="w-full bg-indigo-600 hover:bg-indigo-700"
+            className="w-full"
             onClick={handleSave}
             disabled={!japanese.trim() || !korean.trim() || saving}
           >
