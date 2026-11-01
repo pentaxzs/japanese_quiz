@@ -6,7 +6,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { QuizCard } from '@/components/quiz/QuizCard';
 import { QuizResult } from '@/components/quiz/QuizResult';
-import { ProgressBar } from '@/components/quiz/ProgressBar';
+import { QuizHeader } from '@/components/quiz/QuizHeader';
 import { useQuizStore } from '@/store/quiz-store';
 import { useWrongNoteStore } from '@/store/wrong-note-store';
 import { useSettingsStore } from '@/store/settings-store';
@@ -132,15 +132,15 @@ export function QuizPageClient({ deckId }: Props) {
   if (mode === 'quiz' && session) {
     const current = session.questions[session.currentIndex];
     return (
-      <div className="mx-auto max-w-lg px-4 py-6">
-        <div className="mb-4 flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => { clearSession(); setMode('select'); }}>
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <div className="flex-1">
-            <ProgressBar current={session.currentIndex} total={session.questions.length} />
-          </div>
-        </div>
+      // 화면을 채운다. 빈 공간이 아래로 반쯤 남으면 공부하는 글자가 작아 보인다.
+      <div className="mx-auto flex min-h-[calc(100dvh-6.5rem)] max-w-lg flex-col px-4 py-5 md:min-h-[calc(100dvh-2.5rem)]">
+        <QuizHeader
+          questions={session.questions}
+          currentIndex={session.currentIndex}
+          deckName={deckName}
+          language={deckLanguage}
+          onBack={() => { clearSession(); setMode('select'); }}
+        />
         <QuizCard key={`${current.word.id}-${session.currentIndex}`} question={current} onAnswered={handleAnswered} language={deckLanguage} />
       </div>
     );
@@ -150,7 +150,7 @@ export function QuizPageClient({ deckId }: Props) {
   return (
     <div className="mx-auto max-w-lg px-4 py-6 overflow-x-hidden">
       <div className="mb-6 flex items-center gap-3 min-w-0">
-        <Button variant="ghost" size="icon" className="shrink-0" onClick={() => router.push('/')}>
+        <Button variant="ghost" size="icon" className="shrink-0" aria-label="홈으로" onClick={() => router.push('/')}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div className="min-w-0 flex-1">
@@ -182,7 +182,7 @@ export function QuizPageClient({ deckId }: Props) {
         ))}
 
         <Button
-          className="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 h-14 text-base"
+          className="mt-4 h-14 w-full text-base"
           onClick={() => startQuiz(words)}
           disabled={words.length === 0}
         >
@@ -199,7 +199,7 @@ export function QuizPageClient({ deckId }: Props) {
                 <div className="min-w-0 flex-1 overflow-hidden">
                   <p className="text-sm font-medium truncate">{word.japanese}</p>
                   {showFurigana && word.reading && word.reading !== word.japanese && (
-                    <p className="text-xs text-indigo-400 truncate">{word.reading}</p>
+                    <p className="truncate text-xs text-muted-foreground">{word.reading}</p>
                   )}
                   <p className="text-xs text-muted-foreground truncate">{word.korean}</p>
                 </div>
@@ -213,10 +213,10 @@ export function QuizPageClient({ deckId }: Props) {
                       setWords((prev) => prev.filter((w) => w.id !== word.id));
                       toast.success('단어가 삭제되었습니다.');
                     }}
-                    className="text-muted-foreground hover:text-destructive transition-colors p-0.5"
+                    className="-m-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     aria-label="삭제"
                   >
-                    <Trash2 className="h-3.5 w-3.5" />
+                    <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
               </div>
