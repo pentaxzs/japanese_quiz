@@ -148,7 +148,7 @@ export function WrongNotesQuizClient() {
   return (
     <div className="mx-auto max-w-lg px-4 py-6">
       <div className="mb-4 flex items-center gap-3">
-        <Button variant="ghost" size="icon" onClick={() => { clearSession(); router.push('/wrong-notes'); }}>
+        <Button variant="ghost" size="icon" aria-label="뒤로 가기" onClick={() => { clearSession(); router.push('/wrong-notes'); }}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div className="flex-1">

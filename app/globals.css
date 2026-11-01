@@ -226,9 +226,6 @@ body {
     -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-
-
-
 /*
   .brush 에는 font-weight 를 올리지 않는다. 일본어(Yuji Syuku)도 한글(을지로체)도
   굵기가 400 한 벌뿐이라, 굵게 지정하면 브라우저가 가짜 볼드를 만들어 획이 뭉개진다.
@@ -247,6 +244,17 @@ html,
 body {
   overscroll-behavior-y: contain;
   overflow-x: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /*

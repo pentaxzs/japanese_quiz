@@ -40,10 +40,11 @@ const blackHanSans = Black_Han_Sans({
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   viewportFit: 'cover',
-  themeColor: '#4f46e5',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#efeeeb' },
+    { media: '(prefers-color-scheme: dark)', color: '#1a1a19' },
+  ],
 };
 
 export const metadata: Metadata = {
