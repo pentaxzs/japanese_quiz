@@ -173,6 +173,9 @@ body {
   font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  /* 한국어 기본: 단어 중간에서 끊지 않는다 */
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 /* 브라우저가 그리는 표면도 팔레트를 따른다 */
@@ -187,6 +190,40 @@ body {
 
 * {
   caret-color: var(--mark);
+}
+
+/*
+  줄바꿈은 언어마다 규칙이 다르다. 한 벌로 묶으면 반드시 한쪽이 깨진다.
+
+  - 한국어: 단어를 통째로 유지(keep-all). body 기본값.
+  - 일본어: 띄어쓰기가 없어서 keep-all 을 주면 줄바꿈이 아예 안 되고
+    문장이 화면 밖으로 넘친다. 글자 사이 줄바꿈을 허용하되
+    금칙처리(line-break: strict)로 작은 가나와 문장부호가 줄 앞에 오지 않게 한다.
+
+  Tailwind 의 break-all 은 둘 다 아니다. 아무 데서나 끊어서 양쪽 모두 망가진다.
+*/
+[lang="ja"] {
+  word-break: normal;
+  line-break: strict;
+  overflow-wrap: anywhere;
+}
+
+/* 공부하는 글자 — 학습 대상은 UI 텍스트와 다른 조판을 쓴다 */
+.glyph {
+  font-feature-settings: "palt" 0;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  text-wrap: pretty;
+}
+
+/*
+  붓글씨 — 공부하는 글자 전용.
+  일본어는 Yuji Syuku(붓글씨), 한글은 배민 을지로체(간판 손글씨)에서 나온다.
+  각 서체에 없는 글자는 다음 순서로 흘러가므로 한 클래스로 두 언어를 덮는다.
+*/
+.brush {
+  font-family: var(--font-brush), var(--font-ko-euljiro), var(--font-noto-jp),
+    -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 

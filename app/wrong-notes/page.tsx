@@ -81,7 +81,7 @@ export default function WrongNotesPage() {
         {filteredNotes.length > 0 && (
           <Button
             size="sm"
-            className="gap-1 bg-indigo-600 hover:bg-indigo-700"
+            className="gap-1"
             onClick={handleStartQuiz}
           >
             <Play className="h-3 w-3" />
@@ -98,7 +98,7 @@ export default function WrongNotesPage() {
               onClick={() => setFilter(value)}
               className={`rounded-full px-3 py-1 text-sm transition-colors ${
                 filter === value
-                  ? 'bg-indigo-600 text-white'
+                  ? 'bg-primary text-primary-foreground'
                   : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}
             >
@@ -118,18 +118,20 @@ export default function WrongNotesPage() {
           {filteredNotes.map((note) => {
             const word = words.get(note.wordId);
             if (!word) return null;
+            // 영어 덱은 japanese 필드에 영어가 들어 있다
+            const isEn = (deckLanguages.get(note.deckId) ?? 'japanese') === 'english';
             return (
               <Card key={note.wordId}>
                 <CardContent className="flex items-start justify-between p-4">
                   <div className="min-w-0 flex-1 overflow-hidden">
                     {showFurigana && word.reading && word.reading !== word.japanese && (
-                      <p className="break-all text-xs text-muted-foreground leading-relaxed">{word.reading}</p>
+                      <p lang={isEn ? 'en' : 'ja'} className="glyph text-xs leading-relaxed text-muted-foreground">{word.reading}</p>
                     )}
-                    <p className="break-all font-medium">{word.japanese}</p>
-                    <p className="break-words text-sm text-muted-foreground">{word.korean}</p>
+                    <p lang={isEn ? 'en' : 'ja'} className={`glyph text-lg font-medium ${isEn ? '' : 'brush'}`}>{word.japanese}</p>
+                    <p className="text-sm text-muted-foreground">{word.korean}</p>
                   </div>
                   <div className="flex items-center gap-3 shrink-0 ml-2">
-                    <div className="text-right text-xs text-red-500">
+                    <div className="text-right text-xs text-destructive">
                       <p className="font-semibold">{note.wrongCount}회 오답</p>
                       {note.consecutiveCorrect > 0 && (
                         <p className="text-muted-foreground">연속 정답 {note.consecutiveCorrect}/3</p>
