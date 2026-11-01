@@ -1,22 +1,148 @@
 @import "tailwindcss";
 @variant dark (&:where(.dark, .dark *));
 
-:root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --card: #ffffff;
-  --card-foreground: #0f172a;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --accent: #f1f5f9;
-  --accent-foreground: #0f172a;
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-  --primary: #4f46e5;
-  --primary-foreground: #ffffff;
-  --radius: 0.5rem;
+/*
+  색 체계 — 단일 진실 공급원.
+
+  팔레트는 <html data-palette="sumi|ai|sand"> 로 고르고,
+  라이트/다크는 next-themes 가 붙이는 .dark 클래스가 결정한다.
+  두 축은 서로 독립이며, 인라인 스타일로 토큰을 덮어쓰는 코드는 없어야 한다.
+
+  모든 조합은 scripts/check-contrast.mjs 가 WCAG AA 로 검증한다.
+  팔레트를 추가하거나 값을 바꾸면 `npm run check:contrast` 가 통과해야 한다.
+
+  다크 규칙은 반드시 `[data-palette="x"].dark` 형태로 쓴다. 후손 선택자
+  (`.dark [data-palette="x"]`)는 빌드에서 떨어져 나가 적용되지 않는다.
+  그래서 설정 화면의 팔레트 미리보기 스와치도 같은 요소에 data-palette 와
+  dark 클래스를 함께 붙인다.
+*/
+
+:root,
+[data-palette="sumi"] {
+  --background: #efeeeb;
+  --foreground: #1a1a19;
+  --card: #fbfaf8;
+  --card-foreground: #1a1a19;
+  --muted: #e6e4e0;
+  --muted-foreground: #63605b;
+  --border: #d7d4cc;
+  --input: #d7d4cc;
+  --accent: #e6e4e0;
+  --accent-foreground: #1a1a19;
+  --primary: #1a1a19;
+  --primary-foreground: #fbfaf8;
+  --mark: #b03713;
+  --mark-foreground: #fbfaf8;
+  --destructive: #a32b1e;
+  --destructive-foreground: #fbfaf8;
+  --success: #2f6342;
+  --ring: #b03713;
+  --radius: 0.75rem;
+}
+
+[data-palette="sumi"].dark {
+  --background: #1a1a19;
+  --foreground: #f4f3f0;
+  --card: #262625;
+  --card-foreground: #f4f3f0;
+  --muted: #302f2d;
+  --muted-foreground: #a8a39c;
+  --border: #302f2d;
+  --input: #302f2d;
+  --accent: #302f2d;
+  --accent-foreground: #f4f3f0;
+  --primary: #f4f3f0;
+  --primary-foreground: #1a1a19;
+  --mark: #f2663f;
+  --mark-foreground: #1a1a19;
+  --destructive: #f2857a;
+  --destructive-foreground: #1a1a19;
+  --success: #7cc496;
+  --ring: #f2663f;
+}
+
+[data-palette="ai"] {
+  --background: #edf1f4;
+  --foreground: #101a24;
+  --card: #fbfcfd;
+  --card-foreground: #101a24;
+  --muted: #e0e6ec;
+  --muted-foreground: #566471;
+  --border: #d1d9e1;
+  --input: #d1d9e1;
+  --accent: #e0e6ec;
+  --accent-foreground: #101a24;
+  --primary: #101a24;
+  --primary-foreground: #fbfcfd;
+  --mark: #14567f;
+  --mark-foreground: #fbfcfd;
+  --destructive: #a32b1e;
+  --destructive-foreground: #fbfcfd;
+  --success: #2f6342;
+  --ring: #14567f;
+}
+
+[data-palette="ai"].dark {
+  --background: #101a24;
+  --foreground: #e8eff5;
+  --card: #1a2733;
+  --card-foreground: #e8eff5;
+  --muted: #24323f;
+  --muted-foreground: #9aaab8;
+  --border: #24323f;
+  --input: #24323f;
+  --accent: #24323f;
+  --accent-foreground: #e8eff5;
+  --primary: #e8eff5;
+  --primary-foreground: #101a24;
+  --mark: #f2c14e;
+  --mark-foreground: #101a24;
+  --destructive: #f2857a;
+  --destructive-foreground: #101a24;
+  --success: #7cc496;
+  --ring: #f2c14e;
+}
+
+[data-palette="sand"] {
+  --background: #f2efe8;
+  --foreground: #211d18;
+  --card: #fbf9f4;
+  --card-foreground: #211d18;
+  --muted: #e8e3d8;
+  --muted-foreground: #645c52;
+  --border: #dcd4c3;
+  --input: #dcd4c3;
+  --accent: #e8e3d8;
+  --accent-foreground: #211d18;
+  --primary: #211d18;
+  --primary-foreground: #fbf9f4;
+  --mark: #a3491a;
+  --mark-foreground: #fbf9f4;
+  --destructive: #a32b1e;
+  --destructive-foreground: #fbf9f4;
+  --success: #2f6342;
+  --ring: #a3491a;
+}
+
+[data-palette="sand"].dark {
+  --background: #1b1814;
+  --foreground: #f0ebe2;
+  --card: #272320;
+  --card-foreground: #f0ebe2;
+  --muted: #332e28;
+  --muted-foreground: #aba396;
+  --border: #332e28;
+  --input: #332e28;
+  --accent: #332e28;
+  --accent-foreground: #f0ebe2;
+  --primary: #f0ebe2;
+  --primary-foreground: #1b1814;
+  --mark: #e8904a;
+  --mark-foreground: #1b1814;
+  --destructive: #f2857a;
+  --destructive-foreground: #1b1814;
+  --success: #7cc496;
+  --ring: #e8904a;
 }
 
 @theme inline {
@@ -34,6 +160,10 @@
   --color-destructive-foreground: var(--destructive-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-mark: var(--mark);
+  --color-mark-foreground: var(--mark-foreground);
+  --color-success: var(--success);
+  --color-ring: var(--ring);
   --font-sans: var(--font-noto-jp), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
@@ -45,7 +175,29 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Safe Area support for iPhone notch/home indicator */
+/* 브라우저가 그리는 표면도 팔레트를 따른다 */
+::selection {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+::placeholder {
+  color: var(--muted-foreground);
+}
+
+* {
+  caret-color: var(--mark);
+}
+
+
+
+
+/*
+  .brush 에는 font-weight 를 올리지 않는다. 일본어(Yuji Syuku)도 한글(을지로체)도
+  굵기가 400 한 벌뿐이라, 굵게 지정하면 브라우저가 가짜 볼드를 만들어 획이 뭉개진다.
+  강조가 필요하면 굵기가 아니라 크기나 색으로 준다.
+*/
+
 .safe-area-bottom {
   padding-bottom: env(safe-area-inset-bottom);
 }
@@ -54,24 +206,10 @@ body {
   padding-top: env(safe-area-inset-top);
 }
 
-/* Dark mode */
-.dark {
-  --background: #0f172a;
-  --foreground: #f1f5f9;
-  --card: #1e293b;
-  --card-foreground: #f1f5f9;
-  --muted: #1e293b;
-  --muted-foreground: #94a3b8;
-  --border: #334155;
-  --input: #334155;
-  --accent: #1e293b;
-  --accent-foreground: #f1f5f9;
-  --primary: #6366f1;
-  --primary-foreground: #ffffff;
-}
-
-/* Disable pull-to-refresh during quiz, prevent horizontal scroll */
-html, body {
+html,
+body {
   overscroll-behavior-y: contain;
   overflow-x: hidden;
 }
+
+

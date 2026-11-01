@@ -1,5 +1,7 @@
 export type QuizLanguage = 'japanese' | 'english';
 
+export type PaletteId = 'sumi' | 'ai' | 'sand';
+
 export interface WordStats {
   attempts: number;
   correct: number;

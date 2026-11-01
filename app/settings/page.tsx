@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useSettingsStore } from '@/store/settings-store';
+import { PALETTES } from '@/components/layout/PaletteProvider';
+import { useHydrated } from '@/lib/hooks/useHydrated';
 import { storage, requestPersistentStorage } from '@/lib/storage';
 import { useStorageQuota, formatBytes } from '@/lib/hooks/useStorageQuota';
 import type { BackupData } from '@/lib/types';
@@ -15,9 +17,14 @@ import { toast } from 'sonner';
 const BACKUP_VERSION = 1;
 
 export default function SettingsPage() {
-  const { showFurigana, quizDirection, toggleFurigana, setQuizDirection, apiKey, setApiKey, quizLanguage } =
-    useSettingsStore();
+  const {
+    showFurigana, quizDirection, toggleFurigana, setQuizDirection,
+    apiKey, setApiKey, quizLanguage, palette, setPalette,
+  } = useSettingsStore();
   const { theme, setTheme } = useTheme();
+  const hydrated = useHydrated();
+  const isDark = hydrated && theme === 'dark';
+  const furiganaOn = hydrated ? showFurigana : true;
   const quota = useStorageQuota();
   const [isPersisted, setIsPersisted] = useState<boolean | null>(null);
   const [keyInput, setKeyInput] = useState(apiKey);
@@ -88,7 +95,7 @@ export default function SettingsPage() {
               href="https://console.anthropic.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline text-indigo-600"
+              className="underline text-mark"
             >
               console.anthropic.com
             </a>
@@ -101,7 +108,7 @@ export default function SettingsPage() {
                 value={keyInput}
                 onChange={(e) => setKeyInput(e.target.value)}
                 placeholder="sk-ant-api03-..."
-                className="pr-10 text-base font-mono"
+                className="pr-11 font-mono text-base"
                 autoComplete="off"
                 autoCorrect="off"
                 autoCapitalize="off"
@@ -109,7 +116,8 @@ export default function SettingsPage() {
               <button
                 type="button"
                 onClick={() => setShowKey((v) => !v)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                aria-label={showKey ? 'API 키 가리기' : 'API 키 보기'}
+                className="absolute right-0 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -122,14 +130,14 @@ export default function SettingsPage() {
             </Button>
           </div>
           {apiKey && (
-            <p className="flex items-center gap-1.5 text-xs text-green-600">
+            <p className="flex items-center gap-1.5 text-xs text-success">
               <CheckCircle2 className="h-3.5 w-3.5" />
               API 키가 설정되어 있습니다.
             </p>
           )}
           {!apiKey && (
-            <p className="text-xs text-red-500">
-              API 키를 입력해야 이미지 업로드 및 퀴즈 기능을 사용할 수 있습니다.
+            <p className="text-xs text-muted-foreground">
+              이미지·PDF에서 단어를 추출할 때만 필요합니다. 이미 만든 단어장으로 퀴즈를 푸는 것은 키 없이도 됩니다.
             </p>
           )}
         </CardContent>
@@ -141,15 +149,43 @@ export default function SettingsPage() {
           <CardTitle className="text-sm">표시 설정</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
+          <div>
+            <p className="mb-2 text-sm">테마</p>
+            <div className="grid grid-cols-3 gap-2">
+              {PALETTES.map((p) => (
+                <button
+                  key={p.id}
+                  type="button"
+                  aria-pressed={hydrated && palette === p.id}
+                  onClick={() => setPalette(p.id)}
+                  className={`rounded-xl border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                    hydrated && palette === p.id ? 'border-mark bg-mark/10' : 'border-border hover:border-mark/50'
+                  }`}
+                >
+                  <span
+                    aria-hidden="true"
+                    data-palette={p.id}
+                    className={`mb-2 flex gap-1 ${isDark ? 'dark' : ''}`}
+                  >
+                    <span className="h-5 w-5 rounded-full border border-border bg-background" />
+                    <span className="h-5 w-5 rounded-full bg-mark" />
+                  </span>
+                  <span className="block text-sm font-semibold">{p.label}</span>
+                  <span className="block text-[11px] leading-tight text-muted-foreground">{p.hint}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <label className="flex items-center justify-between">
             <span className="text-sm">후리가나 표시</span>
             <button
               role="switch"
-              aria-checked={showFurigana}
+              aria-checked={furiganaOn}
               onClick={toggleFurigana}
-              className={`relative h-6 w-11 rounded-full transition-colors overflow-hidden ${showFurigana ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-600'}`}
+              className={`relative h-6 w-11 rounded-full transition-colors overflow-hidden ${furiganaOn ? 'bg-primary' : 'bg-muted-foreground/35'}`}
             >
-              <span className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${showFurigana ? 'translate-x-5' : 'translate-x-0'}`} />
+              <span className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-primary-foreground shadow transition-transform ${furiganaOn ? 'translate-x-5' : 'translate-x-0'}`} />
             </button>
           </label>
 
@@ -160,11 +196,11 @@ export default function SettingsPage() {
             </span>
             <button
               role="switch"
-              aria-checked={theme === 'dark'}
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className={`relative h-6 w-11 rounded-full transition-colors overflow-hidden ${theme === 'dark' ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-600'}`}
+              aria-checked={isDark}
+              onClick={() => setTheme(isDark ? 'light' : 'dark')}
+              className={`relative h-6 w-11 rounded-full transition-colors overflow-hidden ${isDark ? 'bg-primary' : 'bg-muted-foreground/35'}`}
             >
-              <span className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${theme === 'dark' ? 'translate-x-5' : 'translate-x-0'}`} />
+              <span className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-primary-foreground shadow transition-transform ${isDark ? 'translate-x-5' : 'translate-x-0'}`} />
             </button>
           </label>
 
@@ -200,7 +236,7 @@ export default function SettingsPage() {
               </div>
               <div className="h-2 rounded-full bg-muted">
                 <div
-                  className="h-full rounded-full bg-indigo-500"
+                  className="h-full rounded-full bg-primary"
                   style={{ width: `${Math.min(quota.percent, 100)}%` }}
                 />
               </div>
@@ -210,7 +246,7 @@ export default function SettingsPage() {
           {isPersisted !== null && (
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm">
-                <Shield className={`h-4 w-4 ${isPersisted ? 'text-green-500' : 'text-muted-foreground'}`} />
+                <Shield className={`h-4 w-4 ${isPersisted ? 'text-success' : 'text-muted-foreground'}`} />
                 <span>{isPersisted ? '영속 저장소 활성화됨' : '영속 저장소 비활성화'}</span>
               </div>
               {!isPersisted && (
