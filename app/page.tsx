@@ -19,6 +19,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
+import { DeckCard } from '@/components/deck/DeckCard';
 import { FileUploader } from '@/components/upload/FileUploader';
 import { ExtractionPreview } from '@/components/upload/ExtractionPreview';
 import { useDeckStore } from '@/store/deck-store';
@@ -218,65 +219,45 @@ export default function HomePage() {
             {visibleDecks.map((deck) => {
               const accuracy = deckStats[deck.id];
               return (
-                <Card key={deck.id} className="transition-shadow hover:shadow-md">
-                  <CardContent className="flex items-center gap-2 p-4">
-                    {/* Main area — click to quiz */}
-                    <div
-                      className="min-w-0 flex-1 cursor-pointer"
-                      onClick={() => router.push(`/quiz/${deck.id}`)}
-                    >
-                      <p className="truncate font-medium">{deck.name}</p>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <p className="text-xs text-muted-foreground">{deck.wordCount}개</p>
-                        {accuracy !== null && accuracy !== undefined && (
-                          <p className="text-xs text-mark font-medium">정답률 {accuracy}%</p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Play button */}
-                    <button
-                      onClick={() => router.push(`/quiz/${deck.id}`)}
-                      className="shrink-0 text-mark hover:opacity-80 p-1 transition-colors"
-                    >
-                      <Play className="h-5 w-5" />
-                    </button>
-
-                    {/* More menu */}
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button
-                          className="shrink-0 text-muted-foreground hover:text-foreground p-1 transition-colors"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <MoreVertical className="h-4 w-4" />
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setRenameTarget(deck);
-                            setRenameValue(deck.name);
-                          }}
-                        >
-                          <Pencil className="mr-2 h-4 w-4" />
-                          이름 변경
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          destructive
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDelete(deck);
-                          }}
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          삭제
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </CardContent>
-                </Card>
+                <DeckCard
+                  key={deck.id}
+                  deck={deck}
+                  accuracy={accuracy}
+                  onOpen={() => router.push(`/quiz/${deck.id}`)}
+                  actions={
+                    <>
+                      <button
+                        onClick={() => router.push(`/quiz/${deck.id}`)}
+                        aria-label={`${deck.name} 퀴즈 시작`}
+                        className="flex h-11 w-11 items-center justify-center rounded-lg text-mark transition-colors hover:bg-mark/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      >
+                        <Play className="h-5 w-5" />
+                      </button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button
+                            aria-label={`${deck.name} 메뉴`}
+                            className="flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          >
+                            <MoreVertical className="h-4 w-4" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem
+                            onClick={() => { setRenameTarget(deck); setRenameValue(deck.name); }}
+                          >
+                            <Pencil className="mr-2 h-4 w-4" />
+                            이름 변경
+                          </DropdownMenuItem>
+                          <DropdownMenuItem destructive onClick={() => handleDelete(deck)}>
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            삭제
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </>
+                  }
+                />
               );
             })}
           </div>

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Trash2, Play, LayoutGrid, List } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { DeckCard } from '@/components/deck/DeckCard';
 import { useDeckStore } from '@/store/deck-store';
 import { useSettingsStore } from '@/store/settings-store';
 import { storage } from '@/lib/storage';
@@ -43,7 +43,9 @@ export default function LibraryPage() {
           <Button
             variant={viewMode === 'grid' ? 'default' : 'ghost'}
             size="icon"
-            className="h-8 w-8"
+            className="h-9 w-9"
+            aria-label="바둑판 보기"
+            aria-pressed={viewMode === 'grid'}
             onClick={() => setViewMode('grid')}
           >
             <LayoutGrid className="h-4 w-4" />
@@ -51,7 +53,9 @@ export default function LibraryPage() {
           <Button
             variant={viewMode === 'list' ? 'default' : 'ghost'}
             size="icon"
-            className="h-8 w-8"
+            className="h-9 w-9"
+            aria-label="목록 보기"
+            aria-pressed={viewMode === 'list'}
             onClick={() => setViewMode('list')}
           >
             <List className="h-4 w-4" />
@@ -66,59 +70,29 @@ export default function LibraryPage() {
       ) : (
         <div className={viewMode === 'grid' ? 'grid grid-cols-2 gap-3' : 'space-y-2'}>
           {visibleDecks.map((deck) => (
-            <Card key={deck.id} className="cursor-pointer" onClick={() => router.push(`/quiz/${deck.id}`)}>
-              {viewMode === 'grid' ? (
-                <CardContent className="flex flex-col gap-3 p-4">
-                  <div className="min-w-0">
-                    <p className="truncate font-medium text-base">{deck.name}</p>
-                    <p className="text-sm text-muted-foreground">{deck.wordCount}개</p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-7 w-7 text-primary"
-                      onClick={(e) => { e.stopPropagation(); router.push(`/quiz/${deck.id}`); }}
-                    >
-                      <Play className="h-3.5 w-3.5" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-7 w-7 text-destructive"
-                      onClick={(e) => { e.stopPropagation(); handleDelete(deck.id, deck.name); }}
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </Button>
-                  </div>
-                </CardContent>
-              ) : (
-                <CardContent className="flex items-center justify-between p-4">
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium text-base">{deck.name}</p>
-                    <p className="text-sm text-muted-foreground">{deck.wordCount}개</p>
-                  </div>
-                  <div className="flex shrink-0 gap-1 ml-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-primary"
-                      onClick={(e) => { e.stopPropagation(); router.push(`/quiz/${deck.id}`); }}
-                    >
-                      <Play className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-destructive"
-                      onClick={(e) => { e.stopPropagation(); handleDelete(deck.id, deck.name); }}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              )}
-            </Card>
+            <DeckCard
+              key={deck.id}
+              deck={deck}
+              onOpen={() => router.push(`/quiz/${deck.id}`)}
+              actions={
+                <>
+                  <button
+                    onClick={() => router.push(`/quiz/${deck.id}`)}
+                    aria-label={`${deck.name} 퀴즈 시작`}
+                    className="flex h-11 w-11 items-center justify-center rounded-lg text-mark transition-colors hover:bg-mark/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <Play className="h-5 w-5" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(deck.id, deck.name)}
+                    aria-label={`${deck.name} 삭제`}
+                    className="flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </>
+              }
+            />
           ))}
         </div>
       )}

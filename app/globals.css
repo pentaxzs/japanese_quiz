@@ -227,6 +227,16 @@ body {
 }
 
 /*
+  손글씨 — 사용자가 직접 붙인 이름(단어장 제목)에 쓴다.
+  .brush 와 달리 붓글씨(Yuji Syuku)를 앞에 두지 않는다. 덱 이름에 섞인
+  라틴 문자까지 붓글씨 라틴으로 그려져 한글과 결이 어긋나기 때문이다.
+*/
+.handwritten {
+  font-family: var(--font-ko-euljiro), var(--font-noto-jp), -apple-system,
+    BlinkMacSystemFont, sans-serif;
+}
+
+/*
   .brush 에는 font-weight 를 올리지 않는다. 일본어(Yuji Syuku)도 한글(을지로체)도
   굵기가 400 한 벌뿐이라, 굵게 지정하면 브라우저가 가짜 볼드를 만들어 획이 뭉개진다.
   강조가 필요하면 굵기가 아니라 크기나 색으로 준다.
