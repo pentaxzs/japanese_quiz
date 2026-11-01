@@ -108,6 +108,14 @@ export default function WrongNotesPage() {
         </div>
       )}
 
+      {/* 연속 정답 n/3 이 무슨 뜻인지 어디에도 설명이 없었다 */}
+      {filteredNotes.length > 0 && (
+        <p className="mb-3 text-xs leading-relaxed text-muted-foreground">
+          틀린 단어는 여기 모입니다. <b className="font-medium text-foreground">연속으로 3번</b> 맞히면
+          외운 것으로 보고 목록에서 빠집니다.
+        </p>
+      )}
+
       {filteredNotes.length === 0 ? (
         <div className="py-16 text-center text-muted-foreground">
           <AlertCircle className="mx-auto mb-3 h-12 w-12 opacity-30" />

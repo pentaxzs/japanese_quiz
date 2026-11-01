@@ -174,9 +174,16 @@ export default function HomePage() {
           <CardContent>
             {!apiKey && (
               <div className="mb-3 rounded-lg border border-mark/30 bg-mark/10 px-3 py-2.5 text-xs leading-relaxed text-foreground">
-                단어를 뽑아오려면 Anthropic API 키가 필요합니다.{' '}
-                <button className="font-medium underline" onClick={() => router.push('/settings')}>
-                  설정으로 이동
+                <p className="font-semibold">먼저 Anthropic API 키가 필요합니다</p>
+                <p className="mt-1 text-muted-foreground">
+                  사진에서 단어를 뽑아내는 데 AI를 씁니다. 키는 이 기기에만 저장되고,
+                  비용은 본인 Anthropic 계정에 청구됩니다. 사진 한 장당 몇 원 수준입니다.
+                </p>
+                <button
+                  className="mt-1.5 font-medium underline"
+                  onClick={() => router.push('/settings')}
+                >
+                  설정에서 키 넣기
                 </button>
               </div>
             )}
@@ -262,11 +269,24 @@ export default function HomePage() {
             이전에는 배너·버튼·안내문이 같은 말을 세 번 했다.
           */}
           {visibleDecks.length === 0 && !showUploader && !extractionResult && (
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              아직 단어장이 없습니다.
-              <br />
-              교재를 찍으면 단어를 뽑아 만들어 드립니다.
-            </p>
+            <div className="mt-5 text-sm leading-relaxed text-muted-foreground">
+              <p className="mb-3">아직 단어장이 없습니다. 이렇게 만듭니다.</p>
+              {/* 순서 자체가 정보라 번호를 붙인다 */}
+              <ol className="space-y-2">
+                {[
+                  '교재나 단어장을 사진으로 찍거나 PDF를 올립니다',
+                  'AI가 단어와 읽는 법, 뜻을 뽑아 단어장을 만듭니다',
+                  '가려진 답을 꾹 눌러 확인하며 외웁니다',
+                ].map((step, i) => (
+                  <li key={i} className="flex gap-2.5">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-muted text-[11px] font-bold tabular-nums text-foreground">
+                      {i + 1}
+                    </span>
+                    <span>{step}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
           )}
         </section>
 

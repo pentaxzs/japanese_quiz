@@ -20,7 +20,7 @@ const MAX_PDF_PAGES = 5;
 
 export function FileUploader({ onExtracted, language = 'japanese' }: FileUploaderProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState('AI가 분석 중입니다...');
+  const [loadingMessage, setLoadingMessage] = useState('사진에서 단어를 뽑는 중입니다');
   const [error, setError] = useState<string | null>(null);
 
   async function extractFromBase64(base64Data: string, mimeType: string) {
@@ -139,6 +139,12 @@ export function FileUploader({ onExtracted, language = 'japanese' }: FileUploade
           <>
             <Loader2 className="mb-3 h-10 w-10 animate-spin text-mark" />
             <p className="text-sm font-medium">{loadingMessage}</p>
+            {/* 30초쯤 아무 설명 없이 기다리게 두지 않는다 */}
+            <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+              보통 20~30초 걸립니다
+              <br />
+              글자를 읽고 뜻과 읽는 법을 찾는 중입니다
+            </p>
           </>
         ) : (
           <>
