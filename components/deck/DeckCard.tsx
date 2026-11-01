@@ -17,8 +17,8 @@ interface DeckCardProps {
  * 숫자를 읽지 않아도 어느 단어장이 두꺼운지 훑어볼 수 있게 하는 게 목적이다.
  */
 function sheetCount(wordCount: number) {
-  if (wordCount >= 25) return 2;
-  if (wordCount >= 10) return 1;
+  if (wordCount >= 40) return 2;
+  if (wordCount >= 15) return 1;
   return 0;
 }
 
@@ -29,8 +29,8 @@ export function DeckCard({ deck, accuracy, onOpen, actions, className }: DeckCar
     <div
       className={cn(
         'relative',
-        sheets === 2 && 'pb-3.5',
-        sheets === 1 && 'pb-2',
+        sheets === 2 && 'pb-[9px]',
+        sheets === 1 && 'pb-[4px]',
         className
       )}
     >
@@ -42,17 +42,17 @@ export function DeckCard({ deck, accuracy, onOpen, actions, className }: DeckCar
       {sheets >= 2 && (
         <span
           aria-hidden="true"
-          className="absolute inset-x-[7px] top-3.5 h-full -rotate-[0.35deg] rounded-xl border border-border bg-muted"
+          className="absolute inset-x-[14px] top-[9px] h-full -rotate-[0.3deg] rounded-lg border border-border bg-muted"
         />
       )}
       {sheets >= 1 && (
         <span
           aria-hidden="true"
-          className="absolute inset-x-[3px] top-2 h-full rounded-xl border border-border bg-muted"
+          className="absolute inset-x-[7px] top-[4px] h-full rounded-lg border border-border bg-muted"
         />
       )}
 
-      <div className="relative z-10 flex items-center gap-2 rounded-xl border border-border bg-card p-4 transition-colors hover:border-mark/40">
+      <div className="relative z-10 flex items-center gap-2 rounded-xl border border-border bg-card p-4 shadow-[0_1px_2px_rgb(0_0_0/0.06),0_4px_10px_-8px_rgb(0_0_0/0.35)] transition-colors hover:border-mark/40">
         <button
           type="button"
           onClick={onOpen}

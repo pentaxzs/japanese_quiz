@@ -215,7 +215,7 @@ export default function HomePage() {
       {visibleDecks.length > 0 && (
         <section>
           <h2 className="mb-3 text-sm font-semibold text-muted-foreground">단어장</h2>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2">
             {visibleDecks.map((deck) => {
               const accuracy = deckStats[deck.id];
               return (
