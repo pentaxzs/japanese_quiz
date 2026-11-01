@@ -139,7 +139,7 @@ export function WrongNotesQuizClient() {
   if (mode === 'result') {
     return (
       <div className="mx-auto max-w-lg px-4 py-6">
-        <QuizResult session={session} onRetry={handleRetry} onWrongOnly={handleWrongOnly} />
+        <QuizResult session={session} onRetry={handleRetry} onWrongOnly={handleWrongOnly} language={quizLanguage} />
       </div>
     );
   }
